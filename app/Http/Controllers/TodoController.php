@@ -5,10 +5,20 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreTodoRequest;
 use App\Http\Requests\UpdateTodoRequest;
 use App\Models\Todo;
-use Illuminate\Support\Facades\DB;
+use App\InputData\Todos\StoreTodoInputData;
+use App\Services\Todos\TodoService;
+use App\Services\Todos\TodoServiceInterface;
 
 class TodoController extends Controller
 {
+
+    protected TodoServiceInterface $service;
+
+    public function __construct()
+    {
+        $this->service = new TodoService();
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -30,16 +40,19 @@ class TodoController extends Controller
      */
     public function store(StoreTodoRequest $request)
     {
+        // 基本バリデーション通過済みのリクエストデータを取得
         $validated_request = $request->safe()->only(['title', 'content']);
 
-        DB::transaction(function () use ($validated_request) {
-            DB::table('todos')->insert([
-                'title'   => $validated_request['title'],
-                'content' => $validated_request['content']
-            ]);
-        });
+        // InputDataに詰める
+        $store_todo_input_data = new StoreTodoInputData($validated_request['title'], $validated_request['content']);
 
-        return response()->json($validated_request);
+        // Serviceクラスに処理（追加バリデーション含む）を委譲しつつ、戻り値のOutputDataを受け取る。
+        $store_todo_output_data = $this->service->store_todos($store_todo_input_data);
+        // OutputDataを配列に変換
+        $response_data = json_decode(json_encode($store_todo_output_data), true);
+
+        // レスポンス返却
+        return response()->json($response_data);
     }
 
     /**
