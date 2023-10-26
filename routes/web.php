@@ -31,4 +31,5 @@ Route::middleware('auth')->group(function () {
 
 require __DIR__.'/auth.php';
 
-Route::apiResource('todos', TodoController::class);
+Route::post('/todos', [TodoController::class, 'store'])->name('todo.store');
+Route::get('/todos/{id}', [TodoController::class, 'show'])->name('todo.show');

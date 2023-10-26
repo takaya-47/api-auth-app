@@ -3,7 +3,7 @@
 namespace App\InputData\Todos;
 
 /**
- * 入力データを格納するDSとしてのクラス
+ * Todo登録において入力データを格納するクラス
  */
 class StoreTodoInputData
 {

@@ -6,17 +6,15 @@ use App\Http\Requests\StoreTodoRequest;
 use App\Http\Requests\UpdateTodoRequest;
 use App\Models\Todo;
 use App\InputData\Todos\StoreTodoInputData;
-use App\Services\Todos\TodoService;
+use App\InputData\Todos\ShowTodoInputData;
 use App\Services\Todos\TodoServiceInterface;
 
 class TodoController extends Controller
 {
 
-    protected TodoServiceInterface $service;
-
-    public function __construct()
+    // NOTE: PHP8以降はプロパティの宣言とコンストラクタの宣言を同時に行える。
+    public function __construct(private TodoServiceInterface $service)
     {
-        $this->service = new TodoService();
     }
 
     /**
@@ -28,15 +26,9 @@ class TodoController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        // apiでは不要になるかも（新規登録のページに相当）
-    }
-
-    /**
-     * Store a newly created resource in storage.
+     * Todo登録
+     *
+     * @param StoreTodoRequest $request
      */
     public function store(StoreTodoRequest $request)
     {
@@ -56,11 +48,17 @@ class TodoController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Todo詳細
+     *
+     * @param int $id
      */
-    public function show(Todo $todo)
+    public function show(int $id)
     {
-        //
+        $show_todo_input_data = new ShowTodoInputData($id);
+
+        $show_todo_output_data = $this->service->show_todo($show_todo_input_data);
+        $response_data = json_decode(json_encode($show_todo_output_data), true);
+        return response()->json($response_data);
     }
 
     /**
