@@ -18,7 +18,7 @@ interface TodoServiceInterface
      * @param  StoreTodoInputData $input_data
      * @return StoreTodoOutputData
      */
-    public function store_todos(StoreTodoInputData $input_data): StoreTodoOutputData;
+    public function storeTodos(StoreTodoInputData $input_data): StoreTodoOutputData;
 
     /**
      * TODO詳細を取得します
@@ -26,5 +26,5 @@ interface TodoServiceInterface
      * @param  ShowTodoInputData $input_data
      * @return ShowTodoOutputData
      */
-    public function show_todo(ShowTodoInputData $input_data): ShowTodoOutputData;
+    public function showTodo(ShowTodoInputData $input_data): ShowTodoOutputData;
 }

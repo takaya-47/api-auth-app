@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreTodoRequest;
 use App\Http\Requests\UpdateTodoRequest;
+use App\Http\Resources\TodoResource;
 use App\Models\Todo;
 use App\InputData\Todos\StoreTodoInputData;
 use App\InputData\Todos\ShowTodoInputData;
@@ -36,12 +37,14 @@ class TodoController extends Controller
         $validated_request = $request->safe()->only(['title', 'content']);
 
         // InputDataに詰める
+        // TODO: user_idもtodosテーブルに追加する
         $store_todo_input_data = new StoreTodoInputData($validated_request['title'], $validated_request['content']);
 
         // Serviceクラスに処理（追加バリデーション含む）を委譲しつつ、戻り値のOutputDataを受け取る。
-        $store_todo_output_data = $this->service->store_todos($store_todo_input_data);
-        // OutputDataを配列に変換
-        $response_data = json_decode(json_encode($store_todo_output_data), true);
+        $store_todo_output_data = $this->service->storeTodos($store_todo_input_data);
+
+        // Resourceを使ってOutputDataを配列に変換
+        $response_data = new TodoResource($store_todo_output_data->getTodo());
 
         // レスポンス返却
         return response()->json($response_data);

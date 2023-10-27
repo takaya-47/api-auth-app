@@ -8,6 +8,7 @@ use App\InputData\Todos\StoreTodoInputData;
 use App\OutputData\Todos\ShowTodoOutputData;
 use App\OutputData\Todos\StoreTodoOutputData;
 use App\Repositories\Todos\TodoRepositoryInterface;
+use App\Models\Todo;
 
 /**
  * Todoを取り扱うサービスクラス
@@ -25,16 +26,16 @@ class TodoService implements TodoServiceInterface
      * @param  StoreTodoInputData $input_data
      * @return StoreTodoOutputData
      */
-    public function store_todos(StoreTodoInputData $input_data): StoreTodoOutputData
+    public function storeTodos(StoreTodoInputData $input_data): StoreTodoOutputData
     {
-        $title = $input_data->get_title();
-        $content = $input_data->get_content();
+        $title = $input_data->getTitle();
+        $content = $input_data->getContent();
 
-        $inserted_id = DB::transaction(function () use ($title, $content): int {
+        $todo = DB::transaction(function () use ($title, $content): Todo {
             return $this->repository->insert(['title' => $title, 'content' => $content]);
         });
 
-        return new StoreTodoOutputData($inserted_id, $title, $content);
+        return new StoreTodoOutputData($todo);
     }
 
     /**
@@ -43,12 +44,11 @@ class TodoService implements TodoServiceInterface
      * @param  ShowTodoInputData $input_data
      * @return ShowTodoOutputData
      */
-    public function show_todo(ShowTodoInputData $input_data): ShowTodoOutputData
+    public function showTodo(ShowTodoInputData $input_data): ShowTodoOutputData
     {
-        $id = $input_data->get_id();
-        $todo = $this->repository->fetch_todo($id);
+        $id = $input_data->geId();
+        $todo = $this->repository->fetchTodo($id);
 
-        // Collectionクラスで返却されたのを
         return new ShowTodoOutputData($todo->all());
     }
 }

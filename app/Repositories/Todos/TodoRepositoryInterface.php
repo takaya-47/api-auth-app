@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Todos;
 
+use App\Models\Todo;
 use Illuminate\Support\Collection as Collection;
 
 /**
@@ -13,9 +14,9 @@ interface TodoRepositoryInterface {
      * Todoを一つ登録します
      *
      * @param  array $params
-     * @return int
+     * @return Todo
      */
-    public function insert(array $params): int;
+    public function insert(array $params): Todo;
 
     /**
      * Todoを一つ取得します
@@ -23,5 +24,5 @@ interface TodoRepositoryInterface {
      * @param  int $id
      * @return Collection
      */
-    public function fetch_todo(int $id): Collection;
+    public function fetchTodo(int $id): Collection;
 }

@@ -21,7 +21,7 @@ class StoreTodoInputData
      *
      * @return string
      */
-    public function get_title(): string
+    public function getTitle(): string
     {
         return $this->title;
     }
@@ -31,7 +31,7 @@ class StoreTodoInputData
      *
      * @return string
      */
-    public function get_content(): string
+    public function getContent(): string
     {
         return $this->content;
     }

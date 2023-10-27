@@ -2,36 +2,27 @@
 
 namespace App\OutputData\Todos;
 
-use JsonSerializable;
+use App\Models\Todo;
 
 /**
  * Todo登録において出力データを格納するクラス
  */
-class StoreTodoOutputData implements JsonSerializable
+class StoreTodoOutputData
 {
-    private int $id;
-    private string $title;
-    private string $content;
+    private Todo $todo;
 
-    public function __construct(int $id, string $title, string $content)
+    public function __construct(Todo $todo)
     {
-        $this->id      = $id;
-        $this->title   = $title;
-        $this->content = $content;
+        $this->todo = $todo;
     }
 
-
     /**
-     * JSONシリアル化時に含めるデータを指定します
+     * todoを取得します
      *
-     * @return array
+     * @return Todo
      */
-    public function jsonSerialize(): array
+    public function getTodo(): Todo
     {
-        return [
-            'id'      => $this->id,
-            'title'   => $this->title,
-            'content' => $this->content
-        ];
+        return $this->todo;
     }
 }
